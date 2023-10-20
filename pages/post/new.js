@@ -4,10 +4,16 @@ import { useState } from "react";
 
 export default function NewPost(props) {
   const [postContent, setPostContent] = useState("");
-
-  const handleClick = async () => {
+  const [topic, setTopic] = useState("");
+  const [keywords, setKeywords] = useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const response = await fetch(`/api/generatePost`, {
       method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ topic, keywords }),
     });
 
     const json = await response.json();
@@ -17,9 +23,31 @@ export default function NewPost(props) {
   return (
     <div>
       <h1>Hello New Post Page!</h1>
-      <button className="btn" onClick={handleClick}>
-        Generate Post
-      </button>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>
+            <strong>Generate a blog post on the topic of:</strong>
+          </label>
+          <textarea
+            className="textInput"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+          ></textarea>
+        </div>
+        <div>
+          <label>
+            <strong>Targeting the following keywords:</strong>
+          </label>
+          <textarea
+            className="textInput"
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
+          ></textarea>
+        </div>
+        <button type="submit" className="btn">
+          Generate Post
+        </button>
+      </form>
       <div dangerouslySetInnerHTML={{ __html: postContent }}></div>
     </div>
   );

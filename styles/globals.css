@@ -6,4 +6,8 @@
   .btn {
     @apply bg-green-500 tracking-wider w-full text-center font-bold cursor-pointer uppercase px-4 py-2 rounded-md hover:bg-green-600 transition-colors block;
   }
+
+  .textInput {
+    @apply resize-none border border-slate-500 block w-full my-2 px-4 py-2 rounded-sm focus-visible:outline-slate-500 focus-visible:outline;
+  }
 }
