@@ -1,3 +1,4 @@
+import { AppLayout } from "../components/AppLayout";
 export default function TokenTopup() {
   return (
     <div>
@@ -5,3 +6,7 @@ export default function TokenTopup() {
     </div>
   );
 }
+
+TokenTopup.getLayout = function getLayout(page, pageProps) {
+  return <AppLayout {...pageProps}>{page}</AppLayout>;
+};
