@@ -1,2 +1,3 @@
-# Next JS & Open AI / GPT: Next-generation Next JS & AI apps
-This is the starter repo for the [Next JS & Open AI / GPT: Next-generation Next JS & AI apps course](https://www.udemy.com/course/next-js-ai/?referralCode=CF9492ACD4991930F84E).
+# Next JS & Open AI / GPT: Generate a blog post with OpenAI
+
+This application uses Next.js, MongoDB, Tailwind.css and OpenAI to generate and store blog posts based on a simple prompt.
