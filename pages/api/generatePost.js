@@ -1,6 +1,20 @@
+import { getSession, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import { Configuration, OpenAIApi } from "openai";
+import clientPromise from "../../lib/mongodb";
 
-export default async function handler(req, res) {
+export default withApiAuthRequired(async function handler(req, res) {
+  const { user } = await getSession(req, res);
+  const client = await clientPromise;
+  const db = client.db("BlogStandard");
+  const userProfile = await db.collection("users").findOne({
+    auth0Id: user.sub,
+  });
+
+  if (!userProfile?.availableTokens) {
+    res.status(403);
+    return;
+  }
+
   const config = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -35,6 +49,9 @@ export default async function handler(req, res) {
     ],
   });
 
+  const postContent =
+    postContentResponse.data.choices[0]?.message?.content || "";
+
   const titleResponse = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     temperature: 0,
@@ -50,7 +67,8 @@ export default async function handler(req, res) {
       },
       {
         role: "user",
-        content: "Generate appropriate title tag text for the above blog post",
+        content:
+          "Generate appropriate title text without html tags for the above blog post",
       },
     ],
   });
@@ -71,13 +89,11 @@ export default async function handler(req, res) {
       {
         role: "user",
         content:
-          "Generate SEO-friendly meta description content for the above blog post",
+          "Generate SEO-friendly meta description content without html tags for the above blog post",
       },
     ],
   });
 
-  const postContent =
-    postContentResponse.data.choices[0]?.message?.content || "";
   const title = titleResponse.data.choices[0]?.message?.content || "";
   const metaDescription =
     metaDesciptionResponse.data.choices[0]?.message?.content || "";
@@ -85,6 +101,27 @@ export default async function handler(req, res) {
   // res.status(200).json({
   //   post: JSON.parse(response.data.choices[0].text.split("\n").join("")),
   // });
+
+  await db.collection("users").updateOne(
+    {
+      auth0Id: user.sub,
+    },
+    {
+      $inc: {
+        availableTokens: -1,
+      },
+    }
+  );
+
+  const post = await db.collection("posts").insertOne({
+    postContent,
+    title,
+    metaDescription,
+    topic,
+    keywords,
+    userId: userProfile._id,
+    created: new Date(),
+  });
   res.status(200).json({
     post: {
       postContent,
@@ -92,4 +129,4 @@ export default async function handler(req, res) {
       metaDescription,
     },
   });
-}
+});
