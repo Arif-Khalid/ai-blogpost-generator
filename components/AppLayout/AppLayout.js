@@ -15,10 +15,7 @@ export const AppLayout = ({ children, availableTokens, posts, postId }) => {
           <Link href="/post/new" className="btn">
             New Post
           </Link>
-          <Link
-            href="/token-topup"
-            className="block mt-2 mx-auto w-fit hover:underline"
-          >
+          <Link href="/token-topup" className="block mt-2 mx-auto w-fit">
             <FontAwesomeIcon icon={faCoins} className="text-yellow-500" />
             <span className="pl-2">{availableTokens} tokens available</span>
           </Link>

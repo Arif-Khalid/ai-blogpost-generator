@@ -21,6 +21,16 @@ export default withApiAuthRequired(async function handler(req, res) {
 
   const openai = new OpenAIApi(config);
 
+  // 422 status code means an unprocessable entity because the data passed here is invalid
+  if (!topic || !keywords) {
+    res.status(422);
+    return;
+  }
+  if (topic.length > 80 || keywords.length > 80) {
+    res.status(422);
+    return;
+  }
+
   const { topic, keywords } = req.body;
 
   /*const response = await openai.createCompletion({
