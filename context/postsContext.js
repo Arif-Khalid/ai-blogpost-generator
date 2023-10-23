@@ -29,7 +29,9 @@ export const PostsProvider = ({ children }) => {
       });
 
       // Ensure that it is sorted correctly, this is for the case where a new post is generated, it will be retrieved as one of the "latest 5 posts" and thus be put at the end of the array when it should be at the front
-      newPosts.sort((a, b) => b.created - a.created);
+      newPosts.sort(
+        (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+      );
       return newPosts;
     });
   }, []);
@@ -67,7 +69,13 @@ export const PostsProvider = ({ children }) => {
   );
   return (
     <PostsContext.Provider
-      value={{ posts, setPostsFromSSR, getPosts, noMorePosts, deletePost }}
+      value={{
+        posts,
+        setPostsFromSSR,
+        getPosts,
+        noMorePosts,
+        deletePost,
+      }}
     >
       {children}
     </PostsContext.Provider>
