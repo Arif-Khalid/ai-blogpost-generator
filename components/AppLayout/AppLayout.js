@@ -4,7 +4,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { Logo } from "../Logo";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import PostsContext from "../../context/postsContext";
 
 export const AppLayout = ({

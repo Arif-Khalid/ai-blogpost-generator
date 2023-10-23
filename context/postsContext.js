@@ -8,6 +8,13 @@ export const PostsProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
 
   const [noMorePosts, setNoMorePosts] = useState(false);
+
+  const deletePost = useCallback((postId) => {
+    setPosts((value) => {
+      return value.filter((post) => post._id !== postId);
+    });
+  }, []);
+
   // This function is called when first 5 posts are loaded into app layout, postsFromSSR thus represents latest 5 posts
   const setPostsFromSSR = useCallback((postsFromSSR = []) => {
     console.log("POSTS FROM SSR:", postsFromSSR);
@@ -60,7 +67,7 @@ export const PostsProvider = ({ children }) => {
   );
   return (
     <PostsContext.Provider
-      value={{ posts, setPostsFromSSR, getPosts, noMorePosts }}
+      value={{ posts, setPostsFromSSR, getPosts, noMorePosts, deletePost }}
     >
       {children}
     </PostsContext.Provider>
