@@ -28,5 +28,7 @@ export default withApiAuthRequired(async function handler(req, res) {
 
     res.status(200).json({ posts });
     return;
-  } catch (e) {}
+  } catch (e) {
+    res.status(404).json({ posts: [] });
+  }
 });

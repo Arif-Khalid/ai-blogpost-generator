@@ -58,7 +58,10 @@ export const AppLayout = ({
               className="hover:underline text-sm text-slate-400 text-center cursor-pointer mt-4"
               onClick={() => {
                 getPosts({
-                  lastPostDate: posts[posts.length - 1].created,
+                  lastPostDate:
+                    posts.length == 0
+                      ? new Date().toString()
+                      : posts[posts.length - 1].created,
                 });
               }}
             >
